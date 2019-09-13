@@ -5,21 +5,23 @@ const app = express();
 const http = require("http").createServer(app);
 const formidable = require("formidable");
 const PORT = 5000;
-
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.post("/upload", (req, res) => {
+  // console.log(req.body);
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files) {
-    console.log(files);
-    var oldpath = files.cv.path;
-    var newpath = __dirname + "/uploaded/" + files.cv.name;
-    fs.rename(oldpath, newpath, function(err) {
-      if (err) throw err;
-      res.sendStatus(200);
-      res.end();
+    let data = JSON.parse(fields.json);
+    let file = data.cv;
+    var base64Data = file.replace(/^data:application\/pdf;base64,/, "");
+
+    require("fs").writeFile("out.pdf", base64Data, "base64", function(err) {
+      console.log(err);
     });
   });
 });
