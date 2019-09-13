@@ -1,2 +1,8 @@
 node_modules
 .history
+
+# exclude everything
+uploaded/*
+
+# exception to the rule
+!uploaded/.gitkeep 
