@@ -5,9 +5,11 @@ const app = express();
 const http = require("http").createServer(app);
 const formidable = require("formidable");
 const PORT = 5000;
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
+
 app.post("/upload", (req, res) => {
   var form = new formidable.IncomingForm();
   form.parse(req, function(err, fields, files) {
@@ -17,6 +19,20 @@ app.post("/upload", (req, res) => {
     fs.rename(oldpath, newpath, function(err) {
       if (err) throw err;
       res.sendStatus(200);
+      res.end();
+    });
+  });
+});
+
+app.post("/uploadform", (req, res) => {
+  var form = new formidable.IncomingForm();
+  form.parse(req, function(err, fields, files) {
+    console.log(files);
+    var oldpath = files.filetoupload.path;
+    var newpath = __dirname + "/uploaded/" + files.filetoupload.name;
+    fs.rename(oldpath, newpath, function(err) {
+      if (err) throw err;
+      res.write("File upload!");
       res.end();
     });
   });
