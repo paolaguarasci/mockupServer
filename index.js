@@ -20,9 +20,14 @@ app.post("/upload", (req, res) => {
     let file = data.cv;
     var base64Data = file.replace(/^data:application\/pdf;base64,/, "");
 
-    require("fs").writeFile("out.pdf", base64Data, "base64", function(err) {
-      console.log(err);
-    });
+    require("fs").writeFile(
+      __dirname + "/uploaded/out.pdf",
+      base64Data,
+      "base64",
+      function(err) {
+        console.log(err);
+      }
+    );
   });
 });
 
